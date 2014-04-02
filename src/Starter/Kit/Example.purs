@@ -8,8 +8,8 @@ import Data.Maybe
 --
 -- If the input is not increasing, it returns Nothing.
 --
--- This contrived example is picked to demonstrate the use
--- of a few standard libraries.
+-- This contrived example was chosen to demonstrate the use
+-- of the Data.Array and Data.Maybe standard libraries.
 
 diffs :: [Number] -> Maybe [Number]
 diffs [] = return []
