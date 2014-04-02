@@ -14,11 +14,11 @@ We will also be using `bower` for package management. If you don't have `bower` 
 
     npm install -g bower
 
-Now install `grunt` and the necessary plugins locally:
+Now install a grunt instance and plugins locally, as specified in `package.json`:
 
-    npm install grunt grunt-purescript grunt-contrib-clean grunt-execute
+    npm install
 
-And pull required dependencies using `bower`:
+And pull required dependencies specified in `bower.json`:
 
     bower update
 
