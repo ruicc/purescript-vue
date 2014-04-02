@@ -1,15 +1,5 @@
 {
   "name": "starter-kit",
-  "version": "1.0.0",
-  "homepage": "https://github.com/purescript/starter-kit",
-  "authors": [
-    "Phil Freeman <paf31@cantab.net>"
-  ],
-  "description": "A basic project template using Grunt and Bower",
-  "keywords": [
-    "purescript"
-  ],
-  "license": "MIT",
   "private": true,
   "ignore": [
     "**/.*",
