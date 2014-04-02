@@ -28,5 +28,4 @@
     "purescript-math"          : "*",
     "purescript-quickcheck"    : "*"
   }
-
 }
