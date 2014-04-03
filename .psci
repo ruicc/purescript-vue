@@ -1,0 +1,8 @@
+:m bower_components/purescript-random/src/Control/Monad/Eff/Random.purs
+:m bower_components/purescript-either/src/Data/Either.purs
+:m bower_components/purescript-tuples/src/Data/Tuple.purs
+:m bower_components/purescript-maybe/src/Data/Maybe.purs
+:m bower_components/purescript-exceptions/src/Control/Monad/Eff/Exception.purs
+:m bower_components/purescript-arrays/src/Data/Array/Unsafe.purs
+:m bower_components/purescript-arrays/src/Data/Array.purs
+:m bower_components/purescript-math/src/Math.purs
