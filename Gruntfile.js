@@ -15,13 +15,10 @@ module.exports = function(grunt) {
       lib: ["js", "externs"]
     },
   
-    "purescript-make": {
-      lib: {
-        src: "<%=libFiles%>"
-      }
-    },
+    pscMake: ["<%=libFiles%>"],
+    dotPsci: ["<%=libFiles%>"],
   
-    purescript: {
+    psc: {
       tests: {
         options: {
           module: ["Main"],
@@ -43,7 +40,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-purescript");
   grunt.loadNpmTasks("grunt-execute");
   
-  grunt.registerTask("test", ["clean:tests", "purescript:tests", "execute:tests"]);
-  grunt.registerTask("lib", ["purescript-make:lib"]);
-  grunt.registerTask("default", ["test", "lib"]);
+  grunt.registerTask("test", ["clean:tests", "psc:tests", "execute:tests"]);
+  grunt.registerTask("make", ["pscMake", "dotPsci"]);
+  grunt.registerTask("default", ["test", "make"]);
 };
