@@ -11,11 +11,12 @@
     "tmp"
   ],
   "dependencies": {
-    "purescript-arrays"        : "*",
-    "purescript-maybe"         : "*"
+    "purescript-arrays"               : "*",
+    "purescript-maybe"                : "*",
+    "purescript-foldable-traversable" : "*"
   },
   "devDependencies": {
-    "purescript-math"          : "*",
-    "purescript-quickcheck"    : "*"
+    "purescript-math"                 : "*",
+    "purescript-quickcheck"           : "*"
   }
 }
