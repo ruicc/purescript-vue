@@ -4,6 +4,7 @@ import Data.Array
 import Data.Maybe
 
 import Debug.Trace
+import Control.Monad.Eff
 
 -- Import the library's module(s)
 import Starter.Kit.Example
