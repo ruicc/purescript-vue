@@ -1,3 +1,5 @@
+:m src/Foo.purs
+:m src/Main.purs
 :m src/Starter/Kit/Example.purs
 :m bower_components/purescript-arrays/src/Data/Array.purs
 :m bower_components/purescript-arrays/src/Data/Array/Unsafe.purs
