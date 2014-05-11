@@ -19,9 +19,10 @@ module.exports = (grunt) ->
     psc:
       tests:
         options:
-          module: ["Main"]
-          main: true
-        src: ["tests/Tests.purs", "<%=libFiles%>"]
+          module: ["TestRunner"]
+          # main: true
+          noMagicDo: true
+        src: ["tests/TestRunner.purs", "<%=libFiles%>"]
         dest: "tmp/tests.js"
       app:
         options:
@@ -33,7 +34,7 @@ module.exports = (grunt) ->
       tests:
         src: "tmp/tests.js"
 
-  grunt.registerTask("test", ["build", "clean:tests", "psc:tests", "execute:tests"])
+  grunt.registerTask("test", ["build", "clean:tests", "psc:tests", "execute:tests", "clean:tests"])
   grunt.registerTask("build", ["psc:app"])
   grunt.registerTask("make", ["pscMake", "dotPsci"])
   grunt.registerTask("default", ["make", "build"])

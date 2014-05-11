@@ -2240,34 +2240,6 @@ PS.Data_Tuple = (function () {
     };
 })();
 var PS = PS || {};
-PS.Starter_Kit_Example = (function () {
-    "use strict";
-    var Prelude = PS.Prelude;
-    var Data_Maybe = PS.Data_Maybe;
-    var diffs = function (_2) {
-        if (_2.length === 0) {
-            return Prelude["return"](Data_Maybe.monadMaybe({}))([  ]);
-        };
-        if (_2.length === 1) {
-            return Prelude["return"](Data_Maybe.monadMaybe({}))([  ]);
-        };
-        if (_2.length > 0) {
-            var _6 = _2.slice(1);
-            if (_6.length > 0) {
-                if (_2[0] <= _6[0]) {
-                    return Prelude[">>="](Data_Maybe.bindMaybe({}))(diffs(_6))(function (_1) {
-                        return Prelude["return"](Data_Maybe.monadMaybe({}))(Prelude[":"](_6[0] - _2[0])(_1));
-                    });
-                };
-            };
-        };
-        return Data_Maybe.Nothing;
-    };
-    return {
-        diffs: diffs
-    };
-})();
-var PS = PS || {};
 PS.Control_Monad_Eff = (function () {
     "use strict";
     var Prelude = PS.Prelude;
