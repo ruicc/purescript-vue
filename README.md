@@ -1,7 +1,7 @@
 purescript project skeleton
 ===========
 
-Getting Started
+Build
 ---------------
  
 ```
@@ -10,7 +10,10 @@ bower install
 grunt
 ```
 
+open public/index.html
+
 Run tests
+-----------------
 
 ```
 grunt test
