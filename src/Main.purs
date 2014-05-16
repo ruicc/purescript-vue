@@ -17,4 +17,4 @@ foreign import vue
     \        }\
     \        new Vue(opt);\
     \    }\
-    \}" :: forall e r. r -> Eff e {}
+    \}" :: forall e r. { el :: String | r } -> Eff e {}
