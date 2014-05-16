@@ -1,9 +1,12 @@
 module Main where
 
 import Control.Monad.Eff
-import Debug.Trace
 
-main = vue $ def { dat = { message: "Can you hear me?" } }
+main = vue
+    {
+        el: "#demo",
+        dat: { message: "Hello Vue.js!" }
+    }
 
 foreign import vue
     "function vue(opt) {\
@@ -14,9 +17,4 @@ foreign import vue
     \        }\
     \        new Vue(opt);\
     \    }\
-    \}" :: forall e. VueOpt -> Eff e {}
-
-type VueOpt = { el :: String, dat :: { message :: String } }
-
-def :: VueOpt
-def = { el: "#demo" , dat: { message: "Hello Vue.js!" } }
+    \}" :: forall e r. r -> Eff e {}
