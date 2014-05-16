@@ -8,6 +8,8 @@ main = vue
         dat: { message: "Hello Vue.js!" }
     }
 
+foreign import data Vue :: *
+
 foreign import vue
     "function vue(opt) {\
     \    return function() {\
@@ -15,6 +17,6 @@ foreign import vue
     \            opt.data = opt.dat;\
     \            delete opt.dat;\
     \        }\
-    \        new Vue(opt);\
+    \        return new Vue(opt);\
     \    }\
-    \}" :: forall e r. { el :: String | r } -> Eff e {}
+    \}" :: forall e r s. { el :: String | r } -> Eff e Vue
