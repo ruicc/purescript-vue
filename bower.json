@@ -11,6 +11,7 @@
     "tmp"
   ],
   "dependencies": {
+    "vue"                             : "*",
     "purescript-arrays"               : "*",
     "purescript-maybe"                : "*",
     "purescript-foldable-traversable" : "*"
