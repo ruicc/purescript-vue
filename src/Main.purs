@@ -44,15 +44,13 @@ foreign import fetchData
     \    };\
     \}" :: forall e. This -> Eff e {}
 
-
--- TODO: forall r a. Eff (method :: Method | r) a
 foreign import method
     "var method = function(f) {\
     \    return function() {\
     \        var self = this;\
     \        return f(self)();\
     \    };\
-    \}" :: forall e' a. (forall r. This -> Eff (method :: Method | r) a) -> Eff e' a
+    \}" :: forall r a. (This -> Eff (method :: Method | r) a) -> Eff r a
 
 -- TODO: need to factor out
 foreign import callM
@@ -66,7 +64,7 @@ foreign import callM
     \           };\
     \       };\
     \    };\
-    \}" :: forall e e' e'' a.  String -> String -> (This -> Eff e' {}) -> (This -> Eff e'' a)
+    \}" :: forall e a. String -> String -> (This -> Eff e {}) -> (This -> Eff (method :: Method | e) {})
 
 watch = callM "$watch"
 
