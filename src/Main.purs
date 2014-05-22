@@ -45,7 +45,7 @@ foreign import fetchData
     \}" :: forall e. This -> Eff e {}
 
 foreign import method
-    "var method = function(f) {\
+    "function method(f) {\
     \    return function() {\
     \        var self = this;\
     \        return f(self)();\
