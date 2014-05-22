@@ -3,9 +3,10 @@ module Main where
 import Control.Monad.Eff
 
 foreign import data Vue :: *
+foreign import data This :: *
 
 foreign import data Filter :: *
-foreign import data Method :: *
+foreign import data Method :: !
 
 foreign import vue
     "function vue(opt) {\
@@ -14,27 +15,9 @@ foreign import vue
     \            opt.data = opt.dat;\
     \            delete opt.dat;\
     \        }\
-    \        var v = new Vue(opt);\
-    \        var f = v.$options.ready;\
-    \        v.$options.ready = f(v);\
-    \        for (var m in v.$options.methods) {\
-    \            var f = v.$options.methods[m];\
-    \            v.$options.methods[m] = f(v);\
-    \        }\
-    \        return v;\
+    \        return new Vue(opt);\
     \    }\
     \}" :: forall e r. { el :: String | r } -> Eff e Vue
-
---foreign import created
---    "function created() {\
---    \    this.$watch('branch', function() {\
---    \        this.fetchData();\
---    \    })\
---    \}" :: Method
-
---created :: forall e a. Eff e a
---created = watch "branch" \ vue -> fetchData
-
 
 
 foreign import truncate
@@ -49,62 +32,43 @@ foreign import formatDate
     \}" :: Filter
 
 foreign import fetchData
-    "function fetchData(vue) {\
+    "function fetchData(self) {\
     \    return function() {\
     \        var apiUrl = 'https://api.github.com/repos/yyx990803/vue/commits?per_page=3&sha=';\
-    \        var xhr = new XMLHttpRequest(),\
-    \            self = this;\
+    \        var xhr = new XMLHttpRequest();\
     \        xhr.open('GET', apiUrl + self.branch);\
     \        xhr.onload = function() {\
     \            self.commits = JSON.parse(xhr.responseText);\
     \        };\
     \        xhr.send();\
-    \    }\
-    \}" :: forall e. Vue -> Eff e {}
-
---foreign import setMethod
---    "function setMethod(vue) {\
---    \    return function(name) {\
---    \        return function(method) {\
---    \            return function() {\
---    \                vue[name] = method;\
---    \                return vue;\
---    \            };\
---    \        };\
---    \    };\
---    \}" :: forall e. Vue -> String -> Method -> Eff e Vue
+    \    };\
+    \}" :: forall e. This -> Eff e {}
 
 
--- TODO: methodが呼び出せるMethodコンテキストEffで作れそうじゃね？？？
--- convert function to method.
+-- TODO: forall r a. Eff (method :: Method | r) a
 foreign import method
-    "function method() {\
-    \    var self = this;\
+    "var method = function(f) {\
     \    return function() {\
-    \        return self;\
+    \        var self = this;\
+    \        return f(self)();\
     \    };\
-    \}" :: forall e a. Eff e Vue
---    \}" :: forall r a. (forall e'. Vue -> Eff e' a) -> Eff (method :: Method | r) a
+    \}" :: forall e' a. (forall r. This -> Eff (method :: Method | r) a) -> Eff e' a
 
-
--- 一般的なメソッド呼び出し難しい(Tupleが要る)
---foreign import callM
---function callM(vue) {
---    function(name) {
---        return vue[name]();
---    }
---}
-
-foreign import watch
-    "function watch(vue) {\
-    \    return function watch(key) {\
+-- TODO: need to factor out
+foreign import callM
+    "function callM(method) {\
+    \    return function(key) {\
     \        return function(eff) {\
-    \            return function() {\
-    \                return vue.$watch(key, eff(vue));\
-    \            };\
-    \        };\
+    \           return function(self) {\
+    \               return function() {\
+    \                   return self[method](key, eff(self));\
+    \               };\
+    \           };\
+    \       };\
     \    };\
-    \}" :: forall e a. Vue -> String -> (Vue -> Eff e {}) -> Eff e a
+    \}" :: forall e e' e'' a.  String -> String -> (This -> Eff e' {}) -> (This -> Eff e'' a)
+
+watch = callM "$watch"
 
 main = do
     vue
@@ -113,12 +77,12 @@ main = do
             dat: {
                 branch: "master"
             },
-            ready: \vue -> watch vue "branch" fetchData,
+            created: method (watch "branch" fetchData),
             filters: {
                 truncate: truncate,
                 formatDate: formatDate
             },
             methods: {
-                fetchData: fetchData
+--                fetchData: fetchData
             }
         }
