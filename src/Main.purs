@@ -53,21 +53,35 @@ foreign import method
     \    };\
     \}" :: forall r a. (Self -> Eff (method :: Method | r) a) -> Eff r a
 
--- TODO: need to factor out
-foreign import callM
-    "function callM(method) {\
-    \    return function(key) {\
-    \        return function(eff) {\
-    \           return function(self) {\
-    \               return function() {\
-    \                   return self[method](key, eff(self));\
-    \               };\
-    \           };\
-    \       };\
+-- method call; 3rd arg should be { arg1 :: a, arg2 :: b, ... }
+foreign import call
+    "function call(obj) {\
+    \    return function(methodName) {\
+    \        return function(args) {\
+    \            return function() {\
+    \                return obj[methodName].apply(obj, rec2arr(args));\
+    \            };\
+    \        };\
     \    };\
-    \}" :: forall e a. String -> String -> (Self -> Eff e {}) -> (Self -> Eff (method :: Method | e) {})
+    \    function rec2arr(rec) {\
+    \        var arr = [];\
+    \        for (var i = 1; i < 100; ++i) {\
+    \            var key = 'arg' + i;\
+    \            if (rec[key] === undefined) {\
+    \                break;\
+    \            } else {\
+    \                arr.push(rec[key]);\
+    \            }\
+    \        }\
+    \        return arr;\
+    \    }\
+    \}" :: forall object arg r e a. object -> String -> r ->  Eff e a
 
-watch = callM "$watch"
+(|>) = call
+infixr 1 |>
+
+watch :: forall e a. String -> (Self -> Eff e {}) -> (Self -> Eff (method :: Method | e) {})
+watch key eff = \self -> self |> "$watch" $ { arg1: key, arg2: (eff self) }
 
 main = do
     vue
