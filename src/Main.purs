@@ -44,6 +44,7 @@ foreign import fetchData
     \    };\
     \}" :: forall e. Self -> Eff e {}
 
+-- `method` takes a Method effect, and makes a method by feeding the effect with the special value `this`
 foreign import method
     "function method(f) {\
     \    return function() {\
