@@ -3,7 +3,7 @@ module Main where
 import Control.Monad.Eff
 
 foreign import data Vue :: *
-foreign import data This :: *
+foreign import data Self :: *
 
 foreign import data Filter :: *
 foreign import data Method :: !
@@ -42,7 +42,7 @@ foreign import fetchData
     \        };\
     \        xhr.send();\
     \    };\
-    \}" :: forall e. This -> Eff e {}
+    \}" :: forall e. Self -> Eff e {}
 
 foreign import method
     "function method(f) {\
@@ -50,7 +50,7 @@ foreign import method
     \        var self = this;\
     \        return f(self)();\
     \    };\
-    \}" :: forall r a. (This -> Eff (method :: Method | r) a) -> Eff r a
+    \}" :: forall r a. (Self -> Eff (method :: Method | r) a) -> Eff r a
 
 -- TODO: need to factor out
 foreign import callM
@@ -64,7 +64,7 @@ foreign import callM
     \           };\
     \       };\
     \    };\
-    \}" :: forall e a. String -> String -> (This -> Eff e {}) -> (This -> Eff (method :: Method | e) {})
+    \}" :: forall e a. String -> String -> (Self -> Eff e {}) -> (Self -> Eff (method :: Method | e) {})
 
 watch = callM "$watch"
 
@@ -81,6 +81,6 @@ main = do
                 formatDate: formatDate
             },
             methods: {
---                fetchData: fetchData
+                fetchData: method fetchData
             }
         }
