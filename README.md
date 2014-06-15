@@ -1,6 +1,8 @@
 purescript project skeleton
 ===========
 
+This is *work-in-progress*.
+
 Build
 ---------------
  
