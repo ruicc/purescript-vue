@@ -597,6 +597,64 @@ PS.Math = (function () {
     };
 })();
 var PS = PS || {};
+PS.Data_String_Regex = (function () {
+    "use strict";
+    function regex(s1) {  return function(s2) {    return new RegExp(s1, s2);  };};
+    function test(r) {  return function (s) {    return r.test(s);  };};
+    function match(r) {  return function (s) {    return s.match(r);   };};
+    function replace(r) {  return function(s1) {    return function(s2) {      return s2.replace(r, s1);    };  };};
+    function replace$prime(r) {  return function(f) {    return function(s2) {      return s2.replace(r, function (match) {        return f(match)(Array.prototype.splice.call(arguments, 1, arguments.length - 3));      });    };  };};
+    function search(r) {  return function (s) {    return s.search(r);  };};
+    return {
+        search: search, 
+        "replace'": replace$prime, 
+        replace: replace, 
+        match: match, 
+        test: test, 
+        regex: regex
+    };
+})();
+var PS = PS || {};
+PS.Data_String = (function () {
+    "use strict";
+    function charAt(i) {  return function(s) {    return s.charAt(i);   };};
+    function charCodeAt(i) {  return function(s) {    return s.charCodeAt(i);   };};
+    function fromCharCode(n) {  return String.fromCharCode(n);};
+    function indexOf(x) {  return function(s) {    return s.indexOf(x);  }; };
+    function indexOf$prime(x) {  return function(startAt) {    return function(s) {      return s.indexOf(x, startAt);    };   }; };
+    function lastIndexOf(x) {  return function(s) {    return s.lastIndexOf(x);  };};
+    function lastIndexOf$prime(x) {  return function(startAt) {    return function(s) {      return s.lastIndexOf(x, startAt);    };   }; };
+    function length(s) {  return s.length;};
+    function localeCompare(s1) {  return function(s2) {    return s1.localeCompare(s2);  };};
+    function replace(s1) {  return function(s2) {    return function(s3) {      return s3.replace(s1, s2);    };  };};
+    function take(n) {  return function(s) {    return s.substr(0, n);  };};
+    function drop(n) {  return function(s) {    return s.substr(n);  };};
+    function split(sep) {  return function(s) {    return s.split(sep);  };};
+    function toLower(s) {  return s.toLowerCase();};
+    function toUpper(s) {  return s.toUpperCase();};
+    function trim(s) {  return s.trim();};
+    function joinWith (s) {  return function (xs) {    return xs.join(s);  };};
+    return {
+        joinWith: joinWith, 
+        trim: trim, 
+        toUpper: toUpper, 
+        toLower: toLower, 
+        split: split, 
+        drop: drop, 
+        take: take, 
+        replace: replace, 
+        localeCompare: localeCompare, 
+        length: length, 
+        "lastIndexOf'": lastIndexOf$prime, 
+        lastIndexOf: lastIndexOf, 
+        "indexOf'": indexOf$prime, 
+        indexOf: indexOf, 
+        fromCharCode: fromCharCode, 
+        charCodeAt: charCodeAt, 
+        charAt: charAt
+    };
+})();
+var PS = PS || {};
 PS.Data_Maybe = (function () {
     "use strict";
     var Prelude = PS.Prelude;
@@ -2246,18 +2304,15 @@ PS.Debug_Trace = (function () {
     };
 })();
 var PS = PS || {};
-PS.Main = (function () {
+PS.Language_JavaScript_Library_FFI = (function () {
     "use strict";
-    function vue(opt) { return function() { if (opt.dat !== undefined) { opt.data = opt.dat; delete opt.dat; } return new Vue(opt); }};
-    var main = vue({
-        el: "#demo", 
-        dat: {
-            message: "Hello Vue.js!"
-        }
-    });
+    function method(f) {    return function() {        var self = this;        return f(self)();    };};
+    function call(obj) {    return function(methodName) {        return function(args) {            return function() {                return obj[methodName].apply(obj, rec2arr(args));            };        };    };    function rec2arr(rec) {        var arr = [];        for (var i = 1; i < 100; ++i) {            var key = 'arg' + i;            if (rec[key] === undefined) {                break;            } else {                arr.push(rec[key]);            }        }        return arr;    }};
+    function property(obj) {  return function(name) {    return obj.name;  }};
+    var $bar$greater = call;
     return {
-        vue: vue, 
-        main: main
+        "|>": $bar$greater, 
+        method: method
     };
 })();
 var PS = PS || {};
@@ -2730,6 +2785,28 @@ PS.Test_QuickCheck = (function () {
         testableResult: testableResult, 
         testableBoolean: testableBoolean, 
         testableFunction: testableFunction
+    };
+})();
+var PS = PS || {};
+PS.Vue = (function () {
+    "use strict";
+    function vue(opt) {   return function() {       if (opt.dat !== undefined) {           opt.data = opt.dat;           delete opt.dat;       }       return new Vue(opt);   }};
+    return {
+        vue: vue
+    };
+})();
+var PS = PS || {};
+PS.Main = (function () {
+    "use strict";
+    var Vue = PS.Vue;
+    var main = Vue.vue({
+        el: "#demo", 
+        dat: {
+            message: "Hello Vue.js!"
+        }
+    });
+    return {
+        main: main
     };
 })();
 var PS = PS || {};

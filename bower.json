@@ -12,9 +12,9 @@
   ],
   "dependencies": {
     "vue"                             : "*",
+    "purescript-strings"              : "*",
     "purescript-arrays"               : "*",
-    "purescript-maybe"                : "*",
-    "purescript-foldable-traversable" : "*"
+    "purescript-maybe"                : "*"
   },
   "devDependencies": {
     "purescript-math"                 : "*",

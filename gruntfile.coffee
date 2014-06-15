@@ -7,6 +7,8 @@ module.exports = (grunt) ->
     libFiles: [
       "bower_components/purescript-*/src/**/*.purs"
       "bower_components/purescript-*/src/**/*.purs.hs"
+      "src/Vue.purs"
+      "src/Language/JavaScript/Library/FFI.purs"
     ]
     clean:
       tests: ["tmp"]

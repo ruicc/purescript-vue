@@ -597,6 +597,64 @@ PS.Math = (function () {
     };
 })();
 var PS = PS || {};
+PS.Data_String_Regex = (function () {
+    "use strict";
+    function regex(s1) {  return function(s2) {    return new RegExp(s1, s2);  };};
+    function test(r) {  return function (s) {    return r.test(s);  };};
+    function match(r) {  return function (s) {    return s.match(r);   };};
+    function replace(r) {  return function(s1) {    return function(s2) {      return s2.replace(r, s1);    };  };};
+    function replace$prime(r) {  return function(f) {    return function(s2) {      return s2.replace(r, function (match) {        return f(match)(Array.prototype.splice.call(arguments, 1, arguments.length - 3));      });    };  };};
+    function search(r) {  return function (s) {    return s.search(r);  };};
+    return {
+        search: search, 
+        "replace'": replace$prime, 
+        replace: replace, 
+        match: match, 
+        test: test, 
+        regex: regex
+    };
+})();
+var PS = PS || {};
+PS.Data_String = (function () {
+    "use strict";
+    function charAt(i) {  return function(s) {    return s.charAt(i);   };};
+    function charCodeAt(i) {  return function(s) {    return s.charCodeAt(i);   };};
+    function fromCharCode(n) {  return String.fromCharCode(n);};
+    function indexOf(x) {  return function(s) {    return s.indexOf(x);  }; };
+    function indexOf$prime(x) {  return function(startAt) {    return function(s) {      return s.indexOf(x, startAt);    };   }; };
+    function lastIndexOf(x) {  return function(s) {    return s.lastIndexOf(x);  };};
+    function lastIndexOf$prime(x) {  return function(startAt) {    return function(s) {      return s.lastIndexOf(x, startAt);    };   }; };
+    function length(s) {  return s.length;};
+    function localeCompare(s1) {  return function(s2) {    return s1.localeCompare(s2);  };};
+    function replace(s1) {  return function(s2) {    return function(s3) {      return s3.replace(s1, s2);    };  };};
+    function take(n) {  return function(s) {    return s.substr(0, n);  };};
+    function drop(n) {  return function(s) {    return s.substr(n);  };};
+    function split(sep) {  return function(s) {    return s.split(sep);  };};
+    function toLower(s) {  return s.toLowerCase();};
+    function toUpper(s) {  return s.toUpperCase();};
+    function trim(s) {  return s.trim();};
+    function joinWith (s) {  return function (xs) {    return xs.join(s);  };};
+    return {
+        joinWith: joinWith, 
+        trim: trim, 
+        toUpper: toUpper, 
+        toLower: toLower, 
+        split: split, 
+        drop: drop, 
+        take: take, 
+        replace: replace, 
+        localeCompare: localeCompare, 
+        length: length, 
+        "lastIndexOf'": lastIndexOf$prime, 
+        lastIndexOf: lastIndexOf, 
+        "indexOf'": indexOf$prime, 
+        indexOf: indexOf, 
+        fromCharCode: fromCharCode, 
+        charCodeAt: charCodeAt, 
+        charAt: charAt
+    };
+})();
+var PS = PS || {};
 PS.Data_Maybe = (function () {
     "use strict";
     var Prelude = PS.Prelude;
@@ -2246,50 +2304,15 @@ PS.Debug_Trace = (function () {
     };
 })();
 var PS = PS || {};
-PS.Main = (function () {
+PS.Language_JavaScript_Library_FFI = (function () {
     "use strict";
-    var Prelude = PS.Prelude;
-    function vue(opt) {    return function() {        if (opt.dat !== undefined) {            opt.data = opt.dat;            delete opt.dat;        }        return new Vue(opt);    }};
-    function truncate(v) {    var newline = v.indexOf('\n');    return newline > -1 ? v.slice(0, newline) : v;};
-    function formatDate(v) {    return v.replace(/T|Z/g, ' ');};
-    function fetchData(self) {    return function() {        var apiUrl = 'https://api.github.com/repos/yyx990803/vue/commits?per_page=3&sha=';        var xhr = new XMLHttpRequest();        xhr.open('GET', apiUrl + self.branch);        xhr.onload = function() {            self.commits = JSON.parse(xhr.responseText);        };        xhr.send();    };};
     function method(f) {    return function() {        var self = this;        return f(self)();    };};
     function call(obj) {    return function(methodName) {        return function(args) {            return function() {                return obj[methodName].apply(obj, rec2arr(args));            };        };    };    function rec2arr(rec) {        var arr = [];        for (var i = 1; i < 100; ++i) {            var key = 'arg' + i;            if (rec[key] === undefined) {                break;            } else {                arr.push(rec[key]);            }        }        return arr;    }};
+    function property(obj) {  return function(name) {    return obj.name;  }};
     var $bar$greater = call;
-    var watch = function (key) {
-        return function (eff) {
-            return function (self) {
-                return $bar$greater(self)("$watch")({
-                    arg1: key, 
-                    arg2: eff(self)
-                });
-            };
-        };
-    };
-    var main = vue({
-        el: "#demo", 
-        dat: {
-            branch: "master"
-        }, 
-        created: method(watch("branch")(fetchData)), 
-        filters: {
-            truncate: truncate, 
-            formatDate: formatDate
-        }, 
-        methods: {
-            fetchData: method(fetchData)
-        }
-    });
     return {
-        main: main, 
-        watch: watch, 
         "|>": $bar$greater, 
-        call: call, 
-        method: method, 
-        fetchData: fetchData, 
-        formatDate: formatDate, 
-        truncate: truncate, 
-        vue: vue
+        method: method
     };
 })();
 var PS = PS || {};
@@ -2762,6 +2785,66 @@ PS.Test_QuickCheck = (function () {
         testableResult: testableResult, 
         testableBoolean: testableBoolean, 
         testableFunction: testableFunction
+    };
+})();
+var PS = PS || {};
+PS.Vue = (function () {
+    "use strict";
+    function vue(opt) {   return function() {       if (opt.dat !== undefined) {           opt.data = opt.dat;           delete opt.dat;       }       return new Vue(opt);   }};
+    return {
+        vue: vue
+    };
+})();
+var PS = PS || {};
+PS.Main = (function () {
+    "use strict";
+    var Prelude = PS.Prelude;
+    var Language_JavaScript_Library_FFI = PS.Language_JavaScript_Library_FFI;
+    var Data_String = PS.Data_String;
+    var Data_String_Regex = PS.Data_String_Regex;
+    var Vue = PS.Vue;
+    function fetchData(self) {    return function() {        var xhr = new XMLHttpRequest();        xhr.open('GET', apiUrl(self.branch));        xhr.onload = function() {            self.commits = JSON.parse(xhr.responseText);        };        xhr.send();    };};
+    var watch = function (key) {
+        return function (eff) {
+            return function (self) {
+                return Language_JavaScript_Library_FFI["|>"](self)("$watch")({
+                    arg1: key, 
+                    arg2: eff(self)
+                });
+            };
+        };
+    };
+    var truncate = function (v) {
+        var newline = Data_String.indexOf(v)("\\n");
+        return (newline > -1) ? Data_String.take(newline)(v) : v;
+    };
+    var formatDate = function (v) {
+        return Data_String_Regex.replace(Data_String_Regex.regex("/T|Z/")("g"))(" ")(v);
+    };
+    var main = Vue.vue({
+        el: "#demo", 
+        dat: {
+            branch: "master"
+        }, 
+        created: Language_JavaScript_Library_FFI.method(watch("branch")(fetchData)), 
+        filters: {
+            truncate: truncate, 
+            formatDate: formatDate
+        }, 
+        methods: {
+            fetchData: Language_JavaScript_Library_FFI.method(fetchData)
+        }
+    });
+    var apiUrl = function (v) {
+        return "https://api.github.com/repos/yyx990803/vue/commits?per_page=3&sha=" + v;
+    };
+    return {
+        main: main, 
+        watch: watch, 
+        apiUrl: apiUrl, 
+        fetchData: fetchData, 
+        formatDate: formatDate, 
+        truncate: truncate
     };
 })();
 var PS = PS || {};
