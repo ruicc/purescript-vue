@@ -29,13 +29,13 @@ module.exports = (grunt) ->
         options:
           module: ["Main"]
           main: true
-        src: ["src/hello_world/Main.purs", "<%=libFiles%>"]
+        src: ["examples/hello_world/Main.purs", "<%=libFiles%>"]
         dest: "public/hello_world/main.js"
       github_commits:
         options:
           module: ["Main"]
           main: true
-        src: ["src/github_commits/Main.purs", "<%=libFiles%>"]
+        src: ["examples/github_commits/Main.purs", "<%=libFiles%>"]
         dest: "public/github_commits/main.js"
     execute:
       tests:
@@ -46,4 +46,5 @@ module.exports = (grunt) ->
   grunt.registerTask("hello_world", ["make", "psc:hello_world"])
   grunt.registerTask("github_commits", ["make", "psc:github_commits"])
   grunt.registerTask("make", ["pscMake", "dotPsci"])
+  grunt.registerTask("examples", ["hello_world", "github_commits"])
   grunt.registerTask("default", ["make", "build"])
